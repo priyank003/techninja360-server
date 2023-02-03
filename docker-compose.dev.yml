@@ -4,7 +4,7 @@ services:
     ports:
       - "8000:80"
   node-app:
-    restart: always  
+    restart: always
     build:
       context: .
       args:
@@ -16,5 +16,7 @@ services:
     environment:
       - NODE_ENV=development
       - TYPESENSE_KEY=ecommerce
+      - MONGO_USER=mongo
+      - MONGO_PASSWORD=mongo
 
     command: npm run dev

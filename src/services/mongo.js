@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const MONGO_URL = process.env.MONGO_URL;
+const MONGO_URL = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.ukdbfw3.mongodb.net/?retryWrites=true&w=majority`;
 
 mongoose.connection.once("open", () => {
   console.log("MongoDB connection ready !");
