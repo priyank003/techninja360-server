@@ -1,0 +1,24 @@
+version: "3"
+volumes:
+  typesense-data:
+    driver: local
+services:
+  # typesense:
+  #   image: typesense/typesense:0.22.2
+  #   entrypoint: -v/tmp/data:/data --data-dir /data --api-key=ecommerce --enable-cors
+  #   ports:
+  #     - "8108:8108"
+  #   volumes:
+  #     - typesense-data:/data
+  node-app:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    environment:
+      - PORT=8000
+    
+    # env_file:
+    #   - ./.env
