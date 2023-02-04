@@ -15,6 +15,7 @@ services:
       - /typesense-data:/data
   node-app:
     build: .
+    image: priyank003/techninja-server
     environment:
       - PORT=8000
 
