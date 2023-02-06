@@ -17,6 +17,7 @@ const ServicesDetails = require("./schema/services.mongo");
 const TypesenseClient = require("../../typesense/client");
 const { uploads } = require("../../../cloudinaryConfig");
 const { findOne, create } = require("./schema/business.mongo");
+const axios = require("axios");
 // const cloudinary = require("../../../cloudinaryConfig");
 
 const postCreateBusiness = async (user_id) => {
@@ -374,14 +375,6 @@ const postBusinessLogo = async (user_id, files) => {
 };
 
 const postBusinessServices = async (user_id, services_arr) => {
-  const listingMerchData = await Listing.findOne(
-    { merchant_id: user_id },
-    { __v: 0 }
-  );
-
-  const { _doc } = listingMerchData;
-  const { _id, ...restDoc } = _doc;
-
   const business_details = await BusinessDetails.findOne({
     merchant_id: user_id,
   });
@@ -389,47 +382,52 @@ const postBusinessServices = async (user_id, services_arr) => {
   business_details.business_services = services_arr;
   await business_details.save();
 
-  services_arr.map(async (service) => {
-    ListingService.findOneAndUpdate(
-      { merchant_id: user_id, service_name: service.service_name },
-      {
-        ...service,
-        listing_id: _doc._id,
-        ...restDoc,
-      },
-      {
-        upsert: true,
-        new: true,
-      },
-      async (err, doc) => {
-        doc.id = doc._id;
-        await doc.save();
-      }
-    );
-  });
+  // services_arr.map(async (service) => {
+  //   ListingService.findOneAndUpdate(
+  //     { merchant_id: user_id, service_name: service.service_name },
+  //     {
+  //       ...service,
+  //       listing_id: _doc._id,
+  //       ...restDoc,
+  //     },
+  //     {
+  //       upsert: true,
+  //       new: true,
+  //     },
+  //     async (err, doc) => {
+  //       doc.id = doc._id;
+  //       await doc.save();
+  //     }
+  //   );
+  // });
 };
 
 const postServiceToTypeSense = async (user_id, service_data) => {
-  const listings = await ListingService.find(
+  const listingMerchData = await Listing.findOne(
     { merchant_id: user_id },
-    { _id: 0, __v: 0, listing_id: 0 }
+    { __v: 0 }
   );
-  // const allListings = await Listing.find(
-  //   {
-  //     merchant_id: user_id,
-  //     // service_id: { $ne: null },
-  //     id: { $ne: null },
-  //   },
-  //   { _id: 0, __v: 0 }
-  // );
 
-  TypesenseClient.collections("listing")
+  const { _doc } = listingMerchData;
+  const { _id, ...rest } = _doc;
+
+  const servicesForTypesense = [];
+
+  service_data.map((service) => {
+    servicesForTypesense.push({ ...service, ...rest });
+  });
+
+  const createdDocs = await TypesenseClient.collections("listing")
     .documents()
-    .import(listings, { action: "upsert" });
+    .import(servicesForTypesense, { action: "create", return_id: true });
 
-  // TypesenseClient.collections("listing")
-  //   .documents()
-  //   .delete({ filter_by: `merchant_id:${user_id}` });
+  const typesense_docs = [];
+  createdDocs.map((doc) => {
+    typesense_docs.push(doc.id);
+  });
+
+  listingMerchData.typsense_docs = typesense_docs;
+  await listingMerchData.save();
 };
 
 const getContacts = async (user_id) => {

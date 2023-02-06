@@ -310,16 +310,11 @@ const httpPostBusinessLogo = async (req, res) => {
 const httpPostBusinessServices = async (req, res) => {
   const user_id = req.userData.user_id;
 
-  // const services = req.body;
   const services_modified = req.body;
 
-  // await Services.deleteMany({ merchant_id: user_id });
-
-  // await Listing.deleteMany({
-  //   merchant_id: user_id,
-  //   // service_id: { $ne: null },
-  //   id: { $ne: null },
-  // });
+  await TypesenseClient.collections("listing")
+    .documents()
+    .delete({ filter_by: `merchant_id:${user_id}` });
 
   await BusinessDetails.updateOne(
     { merchant_id: user_id },
@@ -327,13 +322,7 @@ const httpPostBusinessServices = async (req, res) => {
     { upsert: true }
   );
 
-  // const services_modified = await generateServiceIds(user_id, services);
-
   await postBusinessServices(user_id, services_modified.services);
-
-  // await TypesenseClient.collections("listing")
-  //   .documents()
-  //   .delete({ filter_by: `merchant_id:${user_id}` });
 
   await postServiceToTypeSense(user_id, services_modified.services);
 
