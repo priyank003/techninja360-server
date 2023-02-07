@@ -15,6 +15,7 @@ services:
     volumes:
       - /typesense-data:/data
   node-app:
+    restart: always
     build: .
     image: priyank003/techninja-server
     environment:
