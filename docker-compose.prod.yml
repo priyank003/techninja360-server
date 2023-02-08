@@ -13,4 +13,4 @@ services:
       - MONGO_USER=${MONGO_USER}
       - MONGO_PASSWORD=${MONGO_PASSWORD}
       - TYPESENSE_KEY=${TYPESENSE_KEY}
-    command: npm start
+    command: node ./src/server.js

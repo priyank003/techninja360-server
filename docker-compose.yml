@@ -1,7 +1,7 @@
 version: "3"
 services:
   nginx:
-    restart: always
+    restart: on-failure
     image: nginx:stable-alpine
     ports:
       - "8000:80"
@@ -15,7 +15,7 @@ services:
     volumes:
       - /typesense-data:/data
   node-app:
-    restart: always
+    restart: on-failure
     build: .
     image: priyank003/techninja-server
     environment:
