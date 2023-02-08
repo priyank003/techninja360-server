@@ -18,4 +18,4 @@ services:
       - MONGO_USER=mongo
       - MONGO_PASSWORD=mongo
 
-    command: npm run dev
+    command: npm start
