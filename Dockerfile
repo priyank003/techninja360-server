@@ -17,4 +17,4 @@ ENV PORT 8000
 
 EXPOSE $PORT
 
-CMD ["node","./src/server.js"]
+CMD ["pm2","start","./src/server.js","--watch"]

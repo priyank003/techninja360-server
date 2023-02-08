@@ -4,7 +4,6 @@ services:
     ports:
       - "8000:80"
   node-app:
-    restart: always
     build:
       context: .
       args:

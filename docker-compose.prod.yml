@@ -4,7 +4,6 @@ services:
     ports:
       - "80:80"
   node-app:
-    restart: always
     build:
       context: .
       args:
@@ -14,4 +13,4 @@ services:
       - MONGO_USER=${MONGO_USER}
       - MONGO_PASSWORD=${MONGO_PASSWORD}
       - TYPESENSE_KEY=${TYPESENSE_KEY}
-    command: node ./src/server.js
+    command: pm2 start ./src/server.js --watch
