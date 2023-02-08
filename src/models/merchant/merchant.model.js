@@ -405,10 +405,11 @@ const postBusinessServices = async (user_id, services_arr) => {
 const postServiceToTypeSense = async (user_id, service_data) => {
   const listingMerchData = await Listing.findOne(
     { merchant_id: user_id },
-    { __v: 0 }
+    { __v: 0, typesense_docs: 0 }
   );
 
   const { _doc } = listingMerchData;
+
   const { _id, ...rest } = _doc;
 
   const servicesForTypesense = [];
@@ -419,14 +420,15 @@ const postServiceToTypeSense = async (user_id, service_data) => {
 
   const createdDocs = await TypesenseClient.collections("listing")
     .documents()
-    .import(servicesForTypesense, { action: "create", return_id: true });
+    .import(servicesForTypesense, { action: "create", return_id: true })
+    .catch((err) => console.log(err.importResults));
 
   const typesense_docs = [];
   createdDocs.map((doc) => {
     typesense_docs.push(doc.id);
   });
 
-  listingMerchData.typsense_docs = typesense_docs;
+  listingMerchData.typesense_docs = typesense_docs;
   await listingMerchData.save();
 };
 

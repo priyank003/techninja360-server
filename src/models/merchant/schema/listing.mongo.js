@@ -22,7 +22,7 @@ const ListingSchema = new Schema({
   primary_logo: String,
   secondary_logo: String,
   business_location: [Number],
-  typsense_docs: [String],
+  typesense_docs: [String],
 });
 
 // ListingSchema.pre("save", function (next) {

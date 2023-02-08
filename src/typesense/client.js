@@ -22,7 +22,7 @@ const {
 const client = new Typesense.Client({
   nodes: [
     {
-      host: process.env.NODE_ENV === "development" ? "typesense" : TYPESENSE_IP, // For Typesense Cloud use xxx.a1.typesense.net
+      host: process.env.NODE_ENV === "development" ? "localhost" : TYPESENSE_IP, // For Typesense Cloud use xxx.a1.typesense.net
       port: process.env.NODE_ENV === "development" ? 8108 : TYPESENSE_PORT, // For Typesense Cloud use 443
       protocol: "http", // For Typesense Cloud use https
     },
@@ -44,7 +44,7 @@ Listing.watch([], { fullDocument: "updateLookup" }).on(
   "change",
   async (next) => {
     if (next.operationType == "update") {
-      const typesense_docs = next.fullDocument.typsense_docs;
+      const typesense_docs = next.fullDocument.typesense_docs;
 
       const updatedData = JSON.stringify(next.updateDescription.updatedFields);
 
