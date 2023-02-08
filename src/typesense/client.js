@@ -45,12 +45,19 @@ Listing.watch([], { fullDocument: "updateLookup" }).on(
   async (next) => {
     if (next.operationType == "update") {
       const typesense_docs = next.fullDocument.typesense_docs;
+      if (typesense_docs) {
+        const updatedData = JSON.stringify(
+          next.updateDescription.updatedFields
+        );
 
-      const updatedData = JSON.stringify(next.updateDescription.updatedFields);
-
-      typesense_docs.map(async (id) => {
-        await client.collections("listing").documents(id).update(updatedData);
-      });
+        typesense_docs.map(async (id) => {
+          if (typeof id === "string")
+            await client
+              .collections("listing")
+              .documents(id)
+              .update(updatedData);
+        });
+      }
     }
   }
 );
