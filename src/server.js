@@ -9,7 +9,7 @@ require("dotenv").config();
 
 const app = require("./app");
 
-const { mongoConnect } = require("./services/mongo");
+const { mongoService } = require("./services");
 const PORT = process.env.PORT || 8000;
 
 const server = http.createServer(app);
@@ -24,7 +24,7 @@ const server = http.createServer(app);
 
 async function startServer() {
   // await loadChatUsers();
-  await mongoConnect();
+  await mongoService.mongoConnect();
   // sockets.listen(socketSever);
 
   // server.listen(config.PORT, config.HOST, () => {

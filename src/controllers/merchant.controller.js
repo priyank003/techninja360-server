@@ -117,6 +117,7 @@ const httpPostMerchantSignin = async (req, res) => {
   if (!token) {
     throw new ErrorHandler(500, "merchant signin token cannot be generated");
   }
+
   res.status(200).json({
     status: "ok",
     msg: "welcome merchant",
@@ -310,7 +311,7 @@ const httpPostBusinessLogo = async (req, res) => {
 const httpPostBusinessServices = async (req, res) => {
   const user_id = req.userData.user_id;
 
-  const services_modified = req.body;
+  const services = req.body;
 
   await TypesenseClient.collections("listing")
     .documents()
@@ -321,6 +322,8 @@ const httpPostBusinessServices = async (req, res) => {
     { business_services: [] },
     { upsert: true }
   );
+
+  const services_modified = getServices(services);
 
   await postBusinessServices(user_id, services_modified.services);
 
@@ -427,52 +430,17 @@ const httpDeleteWeeklyHours = async (req, res) => {
     msg: "weekly hour succesfully deleted",
   });
 };
-
-const generateServiceIds = async (user_id, services_arr) => {
-  console.log(services_arr);
-  const is_serviceTv = "tvDesc" in services_arr;
-  const new_arr = await Promise.all(
-    services_arr.services.map(async (service) => {
-      const res = await serviceExists(user_id, service);
-      // !res
-      //   ? (service["service_id"] = `s-${randomBytes(8).toString("hex")}`)
-      //   : (service["service_id"] = res);
-
-      !res
-        ? (service["id"] = `s${randomBytes(8).toString("hex")}`)
-        : (service["id"] = res);
-
-      if (is_serviceTv && String(service.service_type).trim() === "TV Mounting")
-        service.service_desc = services_arr.tvDesc;
-
-      return service;
-    })
-  );
-  return new_arr;
-};
-
-const serviceExists = async (user_id, service) => {
-  const res = await Services.findOne({
-    merchant_id: user_id,
-    service_name: service.service_name,
+const getServices = (services_data) => {
+  services_data.services.map((service) => {
+    if (service.service_price !== "custom") {
+      service.service_price = Number(service.service_price);
+    } else {
+      delete service.service_price;
+      service["custom_price"] = true;
+    }
   });
 
-  if (res) {
-    // return res.service_id;
-    return res.id;
-  }
-
-  return false;
-  // if (res) {
-  //   console.log(`${service.service_name} service already exist`);
-  //   return true;
-  //   // throw new ErrorHandler(
-  //   //   403,
-  //   //   `${service.service_name} service already exist`
-  //   // );
-  // }
-
-  // return false;
+  return services_data;
 };
 
 const generateWeeklyHoursId = async (weeklyHours) => {

@@ -5,6 +5,8 @@ const listingSchema = {
   name: "listing",
   fields: [
     { name: ".*", type: "auto" },
+    { name: "service_price", type: "int32", optional: true },
+    { name: "merchant_slug", type: "string" },
     // { name: "merchant_id", type: "string" },
     // { name: "business_name", type: "string" },
     // { name: "business_rating", type: "int32" },
@@ -20,7 +22,7 @@ const listingSchema = {
     // { name: "service_type", type: "string", optional: true },
     // { name: "service_price", type: "string" },
     // { name: "business_location", type: "geopoint" },
-    // { name: "merchant_slug", type: "string" },
+
     // { name: "primary_logo", type: "string", optional: true },
     // { name: "secondary_logo", type: "string", optional: true },
   ],

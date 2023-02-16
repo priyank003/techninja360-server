@@ -247,7 +247,7 @@ const postBusinessLocation = async (user_id, location_obj) => {
 const postBusinessOthers = async (others_obj) => {
   const { user_id, ...others_details } = others_obj;
 
-  return await BusinessDetails.updateOne(
+  await BusinessDetails.updateOne(
     {
       merchant_id: user_id,
     },
@@ -257,6 +257,18 @@ const postBusinessOthers = async (others_obj) => {
     {
       upsert: true,
     }
+  );
+
+  return await Listing.updateOne(
+    {
+      merchant_id: user_id,
+    },
+    {
+      ...others_details.services,
+      ...others_details.payment_method,
+      ...others_details.plan_type,
+    },
+    { upsert: true }
   );
 };
 
@@ -331,6 +343,7 @@ const postBusinessLogo = async (user_id, files) => {
   // if (!files.length) {
   //   throw new ErrorHandler(500, "logo should not be empty");
   // }
+  console.log(files);
 
   const uploadData = [];
   await Promise.all(
@@ -408,6 +421,8 @@ const postServiceToTypeSense = async (user_id, service_data) => {
     { __v: 0, typesense_docs: 0 }
   );
 
+  checkTypesenseData(listingMerchData);
+    
   const { _doc } = listingMerchData;
 
   const { _id, ...rest } = _doc;
@@ -502,6 +517,26 @@ const deleteWeeklyHour = async (user_id, hourObjectId, hourData) => {
 
   const business = await BusinessDetails.findOne({ merchant_id: user_id });
   business.deleteWeeklyHour(hourObjectId);
+};
+
+const checkTypesenseData = (data) => {
+  if (data.merchant_slug) {
+    const [city, zip, username] = String(data.merchant_slug).split("/");
+
+    if (
+      city === "undefined" ||
+      zip === "undefined" ||
+      username === "undefined"
+    ) {
+      throw new ErrorHandler(
+        500,
+        "merchant slug parameter is undefined, cannot register listing to typesense"
+      );
+    }
+    return true;
+  }
+
+  return false;
 };
 
 module.exports = {
