@@ -273,10 +273,6 @@ const postBusinessOthers = async (others_obj) => {
 };
 
 const postBusinessHours = async (user_id, business_hours) => {
-  // console.log(business_hours);
-
-  // const { time_zone, is_service_247, weekly_hours } = business_hours;
-
   const businessDetails = await BusinessDetails.findOne({
     merchant_id: user_id,
   });
@@ -284,59 +280,13 @@ const postBusinessHours = async (user_id, business_hours) => {
   businessDetails.business_hours = business_hours;
   await businessDetails.save();
 
-  // BusinessDetails.findOneAndUpdate(
-  //   { merchant_id: user_id },
-  //   {
-  //     business_hours: {
-  //       time_zone: time_zone,
-  //       is_service_247: is_service_247,
-  //     },
-  //   },
-  //   { upsert: true, new: true }
-  // );
-
-  // weekly_hours.map((hour) => {
-  //   BusinessHours.findOneAndUpdate(
-  //     {
-  //       merchant_id: user_id,
-  //       hour_id: hour.hour_id,
-  //     },
-  //     {
-  //       hour_id: hour.hour_id,
-  //       days: hour.days,
-  //       start_time: hour.start_time,
-  //       end_time: hour.end_time,
-  //     },
-  //     {
-  //       upsert: true,
-  //       new: true,
-  //     },
-  //     async (err, doc) => {
-  //       if (err) {
-  //         throw new ErrorHandler(
-  //           500,
-  //           `Could not reference week hour ${doc._id}`
-  //         );
-  //       }
-  //       const business = await BusinessDetails.findOne({
-  //         merchant_id: user_id,
-  //       });
-
-  //       business.business_hours.time_zone = time_zone;
-  //       business.business_hours.is_service_247 = is_service_247;
-
-  //       business.pushWeeklyHour(doc._id);
-
-  //       await Listing.updateMany(
-  //         { merchant_id: user_id },
-  //         {
-  //           is_service_247: is_service_247,
-  //         },
-  //         { upsert: true }
-  //       );
-  //     }
-  //   );
-  // });
+  await Listing.updateOne(
+    { merchant_id: user_id },
+    {
+      is_service_247: business_hours.is_service_247,
+    },
+    { upsert: true }
+  );
 };
 
 const postBusinessLogo = async (user_id, files) => {
@@ -422,7 +372,7 @@ const postServiceToTypeSense = async (user_id, service_data) => {
   );
 
   checkTypesenseData(listingMerchData);
-    
+
   const { _doc } = listingMerchData;
 
   const { _id, ...rest } = _doc;

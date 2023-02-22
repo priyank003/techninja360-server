@@ -7,6 +7,7 @@ const listingSchema = {
     { name: ".*", type: "auto" },
     { name: "service_price", type: "int32", optional: true },
     { name: "merchant_slug", type: "string" },
+    { name: "business_location", type: "geopoint" },
     // { name: "merchant_id", type: "string" },
     // { name: "business_name", type: "string" },
     // { name: "business_rating", type: "int32" },
@@ -21,7 +22,6 @@ const listingSchema = {
     // { name: "id", type: "string" },
     // { name: "service_type", type: "string", optional: true },
     // { name: "service_price", type: "string" },
-    // { name: "business_location", type: "geopoint" },
 
     // { name: "primary_logo", type: "string", optional: true },
     // { name: "secondary_logo", type: "string", optional: true },
@@ -29,10 +29,18 @@ const listingSchema = {
   // default_sorting_field: "business_rating",
 };
 
+// let document = {
+//   service_price: 0,
+//   merchant_slug: "",
+//   business_location: [0, 0],
+// };
+
 TypesenseClient.collections()
   .create(listingSchema)
   .then(
-    (data) => {},
+    (data) => {
+      console.log("hi");
+    },
     (err) => {
       console.log("typesense error", err);
     }

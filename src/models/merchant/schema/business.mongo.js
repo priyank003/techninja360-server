@@ -80,7 +80,6 @@ const businessSchema = new Schema({
       service_name: String,
       pricing_type: String,
       service_price: Number,
-      custom_price: Boolean,
       service_desc: String,
     },
   ],

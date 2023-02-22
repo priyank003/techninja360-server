@@ -1,8 +1,4 @@
-const path = require("path");
-const Logo = require("../models/merchant/schema/logo.mongo");
-const express = require("express");
 const { ErrorHandler } = require("../utils/error");
-const { resolve } = require("path");
 const { randomBytes } = require("crypto");
 const {
   postPrimaryContact,
@@ -16,7 +12,6 @@ const {
   postBusinessServices,
   postCreateBusiness,
   postShowCertsAccrdts,
-  postToTypesense,
   postServiceToTypeSense,
   getContacts,
   getBusinessDetails,
@@ -36,6 +31,7 @@ const BusinessHours = require("../models/merchant/schema/hours.mongo");
 const Certificates = require("../models/merchant/schema/certs.mongo");
 const Services = require("../models/merchant/schema/services.mongo");
 const TypesenseClient = require("../typesense/client");
+const { Pricing } = require("aws-sdk");
 
 const httpPostMerchantSignup = async (req, res, next) => {
   const { first_name, last_name, phone_no, email, password } = req.body;
@@ -432,11 +428,11 @@ const httpDeleteWeeklyHours = async (req, res) => {
 };
 const getServices = (services_data) => {
   services_data.services.map((service) => {
-    if (service.service_price !== "custom") {
-      service.service_price = Number(service.service_price);
-    } else {
+    if (service.service_price === -1) {
       delete service.service_price;
-      service["custom_price"] = true;
+      service.pricing_type = "call";
+    } else {
+      service.service_price = Number(service.service_price);
     }
   });
 
