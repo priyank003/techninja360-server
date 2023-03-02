@@ -6,9 +6,8 @@ COPY package.json .
 
 ARG NODE_ENV
 
-RUN apt update -y \
-    && apt-get install python3-certbot-nginx -y \
-    && apt-get clean
+RUN apk update -y \
+    && apk add install python3-certbot-nginx -y 
 
 RUN if [ "$NODE_ENV" = "development" ]; \
         then npm install; \
