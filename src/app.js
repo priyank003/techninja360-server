@@ -85,7 +85,7 @@ app.use("/api/user", userRouter);
 app.use("/api/merchant", merchantRouter);
 app.use("/api/business", businessRouter);
 
-// app.use(express.static(path.join(__dirname, "..", "..", "client", "build")));
+app.use(express.static(path.join(__dirname, "..", "public")));
 
 app.get("/api", (req, res) => {
   // res.send(`Hello world from http://${config.HOST}:${config.PORT}`);
