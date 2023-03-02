@@ -97,6 +97,10 @@ app.get("/api/secret", (req, res) => {
   res.send("techninja secret is 360");
 });
 
+app.get("/*", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "public", "index.html"));
+});
+
 app.use(handleErrors);
 
 module.exports = app;
