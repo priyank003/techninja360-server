@@ -22,10 +22,10 @@ const {
 const client = new Typesense.Client({
   nodes: [
     {
-      //  host: process.env.NODE_ENV === "development" ? "localhost" : TYPESENSE_IP, // For Typesense Cloud use xxx.a1.typesense.net
-      host: "typesense",
-      // port: process.env.NODE_ENV === "development" ? 8108 : TYPESENSE_PORT, // For Typesense Cloud use 443
-      port: 8108,
+      host: process.env.NODE_ENV === "development" ? "localhost" : TYPESENSE_IP, // For Typesense Cloud use xxx.a1.typesense.net
+      //host: "typesense",
+      port: process.env.NODE_ENV === "development" ? 8108 : TYPESENSE_PORT, // For Typesense Cloud use 443
+      // port: 8108,
 
       protocol: "http", // For Typesense Cloud use https
     },
