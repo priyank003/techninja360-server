@@ -93,6 +93,10 @@ app.get("/api", (req, res) => {
   console.log("yeah it ran");
 });
 
+app.get("/api/secret", (req, res) => {
+  res.send("techninja secret is 360");
+});
+
 app.use(handleErrors);
 
 module.exports = app;

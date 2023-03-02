@@ -3,6 +3,8 @@ services:
   nginx:
     ports:
       - "80:80"
+      - "443:443"
+    restart: always
   node-app:
     build:
       context: .
