@@ -1,12 +1,12 @@
 version: "3"
 services:
-  nginx:
-    restart: on-failure
-    image: nginx:stable-alpine
-    ports:
-      - "8000:80"
-    volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+  # nginx:
+  #   restart: on-failure
+  #   image: nginx:stable-alpine
+  #   ports:
+  #     - "8000:80"
+  #   volumes:
+  #     - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
   typesense:
     image: typesense/typesense:0.24.0
     command: "--data-dir /data --api-key=ecommerce --enable-cors"
@@ -14,12 +14,12 @@ services:
       - "8108:8108"
     volumes:
       - /typesense-data:/data
-  node-app:
-    restart: on-failure
-    build: .
-    image: priyank003/techninja-server
-    environment:
-      - PORT=8000
+  # node-app:
+  #   restart: on-failure
+  #   build: .
+  #   image: priyank003/techninja-server
+  #   environment:
+  #     - PORT=8000
 
 volumes:
   typesense-data:
