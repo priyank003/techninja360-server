@@ -1,18 +1,18 @@
-version: "3"
-services:
+# version: "3"
+# services:
   # nginx:
   #   ports:
   #     - "80:80"
   #     - "443:443"
   #   restart: always
-  node-app:
-    build:
-      context: .
-      args:
-        NODE_ENV: production
-    environment:
-      - NODE_ENV=production
-      - MONGO_USER=${MONGO_USER}
-      - MONGO_PASSWORD=${MONGO_PASSWORD}
-      - TYPESENSE_KEY=${TYPESENSE_KEY}
-    command: node ./src/server.js
+  # node-app:
+  #   build:
+  #     context: .
+  #     args:
+  #       NODE_ENV: production
+  #   environment:
+  #     - NODE_ENV=production
+  #     - MONGO_USER=${MONGO_USER}
+  #     - MONGO_PASSWORD=${MONGO_PASSWORD}
+  #     - TYPESENSE_KEY=${TYPESENSE_KEY}
+  #   command: node ./src/server.js
