@@ -14,12 +14,12 @@ services:
       - "8108:8108"
     volumes:
       - /typesense-data:/data
-  node-app:
-    restart: on-failure
-    build: .
-    image: priyank003/techninja-server
-    environment:
-      - PORT=8000
+  # node-app:
+  #   restart: on-failure
+  #   build: .
+  #   image: priyank003/techninja-server
+  #   environment:
+  #     - PORT=8000
 
 volumes:
   typesense-data:
