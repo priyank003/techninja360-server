@@ -17,6 +17,10 @@ const handleErrors = require("./middleware/handleErrors");
 const TypesenseClient = require("./typesense/client");
 
 app.enable("trust proxy");
+const corsOptions = {
+  origin: ["https://techninja360.com/"],
+};
+app.use(cors(corsOptions));
 
 require("./typesense/businessCollection");
 require("./typesense/listingCollection");
@@ -45,12 +49,7 @@ const swaggerOptions = {
 const specs = swaggerJsDoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
-const corsOptions = {
-  origin: "*",
-};
-
 app.use(morgan("dev"));
-app.use(cors(corsOptions));
 
 //security related middlewares
 // app.use(helmet());
