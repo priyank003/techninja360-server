@@ -17,10 +17,11 @@ const handleErrors = require("./middleware/handleErrors");
 const TypesenseClient = require("./typesense/client");
 
 app.enable("trust proxy");
-const corsOptions = {
-  origin: ["https://techninja360.com/"],
-};
-app.use(cors(corsOptions));
+// const corsOptions = {
+//   origin: ["https://techninja360.com/"],
+//   cred
+// };
+app.use(cors({ credentials: true, origin: true }));
 
 require("./typesense/businessCollection");
 require("./typesense/listingCollection");
